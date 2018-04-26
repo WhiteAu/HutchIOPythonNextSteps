@@ -19,8 +19,11 @@ def using_args(*numbers_to_sum):
 def using_kwargs(**keywords):
     if "hello" in keywords:
         print("hello {}".format(keywords["hello"]))
-    if"goodbye" in keywords:
+    if "goodbye" in keywords:
         print("goodbye {}".format(keywords["goodbye"]))
+
+    for key in keywords.keys():
+        print("the keyword {} was found in **keywords!".format(key))
 
 def get_primes(number):
     while True:
