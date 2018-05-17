@@ -5,12 +5,12 @@ cmd_arg_parser = argparse.ArgumentParser("A example script that combines config 
 cmd_arg_parser.add_argument('-t', action="store_true", default=False,
                             dest="is_test",
                             help="Set mode to test. There will be additional debug information and no computationally expensive functions will be run.")
-cmd_arg_parser.add_argument('-g',
+cmd_arg_parser.add_argument('--b1',
                             action="store_true",
                             default=True,
                             dest="is_branch_one",
                             help="Set mode to Branch one")
-cmd_arg_parser.add_argument('-c', action="store_true",
+cmd_arg_parser.add_argument('--b2', action="store_true",
                             default=False,
                             dest="is_branch_two",
                             help="Set mode to Branch two")
@@ -21,14 +21,14 @@ cmd_arg_parser.add_argument('--load',
 cmd_arg_parser.add_argument('-a',
                             action="store_true",
                             default=False,
-                            dest="all_chromosomes",
-                            help="Run PCA over all Chromosomes. WARNING: This is computationally expensive!")
-cmd_arg_parser.add_argument('--chromosomes',
+                            dest="allnums",
+                            help="A flag to run all of our numbers!")
+cmd_arg_parser.add_argument('--nums',
                             nargs='+',
                             type=int,
                             default=[],
-                            dest="chromosome_num",
-                            help="Run PCA over specific chromosomes. WARNING: This is computationally expensive!")
+                            dest="numlist",
+                            help="A flag to supply an optional list of 1+ numbers")
 
 cmd_args = cmd_arg_parser.parse_args()
 
@@ -55,28 +55,42 @@ data_dir = None
 input_dir = None
 if cmd_args.is_branch_one:
     cfg_branch = config['treeroot']['branch1']
-    cfg_name = cfg_branch['name']
-    cfg_branch = cfg_branch['branch1-1']
-
-
 elif cmd_args.is_branch_two:
     cfg_branch = config['treeroot']['branch2']
-    cfg_name = cfg_branch['name']
-    cfg_branch = cfg_branch['branch2-1']
-
 else:
     raise(Exception())
+
+cfg_name = cfg_branch['name']
+cfg_branch = cfg_branch['inner_branch']
 
 if cmd_args.model_dir != None:
     model_directory = cmd_args.model_dir
 
-chromosomes=[]
-if cmd_args.all_chromosomes:
-    chromosomes = list(range(1,23))
-elif cmd_args.chromosome_num != []:
-    chromosomes = cmd_args.chromosome_num
+'''
+below we use some basic if/else logic to condense two possible cmd line arguments to a single variable
+'''
+nums=[]
+
+if cmd_args.allnums and cmd_args.numlist != []:
+    raise(Exception("These are mutually exclusive!"))
+elif cmd_args.allnums:
+    nums = list(range(1,23))
+elif cmd_args.numlist != []:
+    nums = cmd_args.numlist
 else:
-    print("neither --chromosomes or -a were provided on the command line. Provided args were {}".format(cmd_args))
-    raise(Exception("Either specify all chromosomes using -a or specific chromosomes using --chromosomes <space separated list eg: 1 2 3...>"))
+    print("neither --nums or -a were provided on the command line. Provided args were {}".format(cmd_args))
+    raise(Exception("Either specify all nums using -a or specific nums using --nums <space separated list eg: 1 2 3...>"))
+
+def num_param_parser(all_flag, nums_flag):
+    logic_fails = False
+    print("do some complex logic here!")
+    if logic_fails:
+        raise(Exception())
+    else:
+        return None
+
 
 print("our chosen cfg_name: {} our chosen cfg_branch: {}".format(cfg_name, cfg_branch))
+print("from our allnums/num-list split, we got: {}".format(nums))
+print("our supplied model directory from the command line is: {}".format(cmd_args.model_dir))
+print("all our command line arguments were: {}".format(cmd_args))
