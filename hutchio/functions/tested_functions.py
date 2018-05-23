@@ -47,7 +47,6 @@ def get_primes(number):
 
 def _is_prime(number):
     '''
-
     :param number: the number to test
     :return: True if Prime(number) False otherwise
 
